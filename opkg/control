@@ -1,0 +1,9 @@
+Source: libiconv
+Section: base
+Priority: optional
+Maintainer: Dan Drown <dan-android@drown.org>
+Package: libiconv
+Version: 1.14
+Architecture: arm
+Depends: linker
+Description: This library provides an iconv() implementation, which can convert from/to Unicode.

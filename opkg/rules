@@ -1,0 +1,43 @@
+#!/bin/sh
+set -e 
+
+PACKAGE=libiconv
+
+case "$1" in
+  build)
+    if [ \! -f configure ]; then
+      ./autogen.sh
+    fi
+    # from crystax/cosp-android-libiconv, don't override our stdint.h
+    export gl_cv_header_working_stdint_h=yes
+    ./configure --host=arm-linux --prefix=/data/local \
+      CC=agcc LDFLAGS="-Wl,-dynamic-linker,/data/local/bin/linker"
+    make
+    ;;
+
+  install)
+    DESTDIR=~/tmp/$PACKAGE
+    rm -rf $DESTDIR
+    mkdir -p $DESTDIR
+    make install DESTDIR=$DESTDIR
+
+    # -devel package
+    DEVEL_DESTDIR=~/tmp/$PACKAGE-devel
+    rm -rf $DEVEL_DESTDIR
+    mkdir -p $DEVEL_DESTDIR/data/local/lib
+    mv $DESTDIR/data/local/lib/*.{a,so,la} $DEVEL_DESTDIR/data/local/lib
+    mv $DESTDIR/data/local/share $DEVEL_DESTDIR/data/local/
+    mv $DESTDIR/data/local/include $DEVEL_DESTDIR/data/local/
+    mkdir -p $DEVEL_DESTDIR/CONTROL
+    cp opkg/control-devel $DEVEL_DESTDIR/CONTROL/control
+    opkg-build -o 0 -g 0 $DEVEL_DESTDIR `cd .. ; pwd`
+    ;;
+    
+  clean)
+    make clean
+    ;;
+
+  *)
+    echo unknown argument $1
+    ;;
+esac
