@@ -1,0 +1,14 @@
+Makefile
+config.h
+config.log
+config.status
+include/iconv.h
+include/iconv.h.inst
+lib/stamp-h2
+libcharset/include/libcharset.h
+libcharset/include/localcharset.h
+libcharset/include/localcharset.h.inst
+libtool
+po/Makefile.in
+po/POTFILES
+stamp-h1
